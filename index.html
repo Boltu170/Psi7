@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Psychology for Nursing | ARU Foundation</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --tan: #555555;
+    --tan-light: #E8E8E8;
+    --tan-dark: #333333;
+    --navy: #111111;
+    --navy-mid: #222222;
+    --cream: #F5F5F5;
+    --white: #FFFFFF;
+    --accent: #000000;
+    --correct: #1a1a1a;
+    --wrong: #666666;
+    --font-display: 'Playfair Display', serif;
+    --font-body: 'Lato', sans-serif;
+  }
+
+- { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+font-family: var(–font-body);
+background: var(–cream);
+color: var(–navy);
+min-height: 100vh;
+overflow: hidden;
+}
+
+#progress-bar {
+position: fixed;
+top: 0; left: 0;
+height: 4px;
+background: linear-gradient(90deg, var(–accent), var(–tan-dark));
+transition: width 0.4s ease;
+z-index: 100;
+}
+
+#slideshow {
+width: 100vw;
+height: 100vh;
+position: relative;
+overflow: hidden;
+}
+
+.slide {
+position: absolute;
+inset: 0;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+padding: 50px 60px 110px;
+opacity: 0;
+transform: translateX(60px);
+transition: opacity 0.5s ease, transform 0.5s ease;
+pointer-events: none;
+overflow-y: auto;
+}
+.slide.active { opacity: 1; transform: translateX(0); pointer-events: all; }
+.slide.exit { opacity: 0; transform: translateX(-60px); }
+
+.slide-cover {
+background: var(–navy);
+color: var(–white);
+text-align: center;
+}
+.slide-cover .week-badge {
+display: inline-block;
+background: var(–tan);
+color: var(–navy);
+font-size: 0.75rem;
+font-weight: 700;
+letter-spacing: 0.15em;
+text-transform: uppercase;
+padding: 6px 18px;
+border-radius: 20px;
+margin-bottom: 24px;
+}
+.slide-cover h1 {
+font-family: var(–font-display);
+font-size: clamp(2.2rem, 5vw, 3.8rem);
+line-height: 1.15;
+margin-bottom: 20px;
+color: var(–tan-light);
+}
+.slide-cover p { font-size: 1.05rem; opacity: 0.75; max-width: 540px; line-height: 1.7; }
+.slide-cover .aru-logo { margin-top: 36px; font-size: 0.78rem; opacity: 0.45; letter-spacing: 0.08em; text-transform: uppercase; }
+
+.slide-content { background: var(–cream); align-items: flex-start; justify-content: flex-start; padding-top: 55px; }
+.slide-tan { background: var(–tan-light); }
+.slide-navy-soft { background: #EEF1F8; }
+
+.slide-divider {
+background: linear-gradient(135deg, var(–navy) 60%, var(–navy-mid));
+color: var(–white);
+text-align: center;
+}
+.slide-divider .section-num {
+font-size: 5rem;
+font-family: var(–font-display);
+color: var(–tan);
+opacity: 0.3;
+line-height: 1;
+margin-bottom: -10px;
+}
+.slide-divider h2 { font-family: var(–font-display); font-size: clamp(1.8rem, 4vw, 3rem); color: var(–tan-light); margin-bottom: 16px; }
+.slide-divider p { font-size: 1rem; opacity: 0.6; max-width: 480px; margin: 0 auto; line-height: 1.7; }
+
+.slide-tag { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(–accent); margin-bottom: 10px; }
+
+h2.slide-title {
+font-family: var(–font-display);
+font-size: clamp(1.4rem, 2.8vw, 2.1rem);
+color: var(–navy);
+margin-bottom: 20px;
+line-height: 1.25;
+border-bottom: 3px solid var(–tan);
+padding-bottom: 10px;
+width: 100%;
+}
+
+.card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; width: 100%; margin-bottom: 16px; }
+
+.card {
+background: var(–white);
+border-radius: 12px;
+padding: 18px;
+border-left: 4px solid var(–tan-dark);
+box-shadow: 0 2px 10px rgba(27,42,74,0.07);
+}
+.card h3 { font-size: 0.85rem; font-weight: 700; color: var(–accent); margin-bottom: 7px; text-transform: uppercase; letter-spacing: 0.06em; }
+.card p, .card li { font-size: 0.85rem; line-height: 1.6; color: var(–navy); }
+.card ul { padding-left: 15px; }
+
+.nursing-box {
+background: linear-gradient(135deg, var(–navy), var(–navy-mid));
+color: var(–white);
+border-radius: 12px;
+padding: 15px 20px;
+width: 100%;
+margin-top: 14px;
+display: flex;
+gap: 14px;
+align-items: flex-start;
+}
+.nursing-box .icon { font-size: 1.6rem; flex-shrink: 0; }
+.nursing-box p { font-size: 0.85rem; line-height: 1.65; color: #ffffff; opacity: 1; }
+.nursing-box strong { color: #ffffff; font-weight: 900; text-decoration: underline; }
+.nursing-box em { color: #cccccc; }
+
+.cite { font-size: 0.7rem; color: var(–tan-dark); font-style: italic; margin-top: 8px; width: 100%; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; width: 100%; }
+
+/* QUIZ */
+.quiz-wrap { width: 100%; }
+.question-block { background: var(–white); border-radius: 14px; padding: 18px 20px; margin-bottom: 14px; box-shadow: 0 2px 10px rgba(27,42,74,0.08); }
+.question-block p.q-text { font-size: 0.9rem; font-weight: 700; color: var(–navy); margin-bottom: 12px; line-height: 1.5; }
+.options { display: flex; flex-direction: column; gap: 7px; }
+.opt-btn { background: var(–tan-light); border: 2px solid transparent; border-radius: 8px; padding: 9px 14px; font-family: var(–font-body); font-size: 0.84rem; color: var(–navy); cursor: pointer; text-align: left; transition: all 0.2s; }
+.opt-btn:hover { background: var(–tan); border-color: var(–tan-dark); }
+.opt-btn.correct { background: #1a1a1a; border-color: #1a1a1a; color: #ffffff; }
+.opt-btn.wrong { background: #d0d0d0; border-color: #888; color: #333; text-decoration: line-through; }
+
+.tf-row { display: flex; gap: 10px; margin-top: 8px; }
+.tf-btn { flex: 1; padding: 10px; border-radius: 8px; border: 2px solid var(–tan-dark); background: var(–white); font-family: var(–font-body); font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; color: var(–navy); }
+.tf-btn:hover { background: var(–tan-light); }
+.tf-btn.correct { background: #1a1a1a; border-color: #1a1a1a; color: #ffffff; }
+.tf-btn.wrong { background: #d0d0d0; border-color: #888; color: #333; text-decoration: line-through; }
+
+.show-answer-btn { background: transparent; border: 2px solid var(–accent); border-radius: 8px; padding: 7px 16px; font-family: var(–font-body); font-size: 0.8rem; font-weight: 700; color: var(–accent); cursor: pointer; margin-top: 10px; transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.05em; }
+.show-answer-btn:hover { background: var(–accent); color: var(–white); }
+
+.answer-reveal { display: none; margin-top: 10px; background: linear-gradient(135deg,#fff8f0,#fef3e8); border-left: 4px solid var(–accent); border-radius: 0 8px 8px 0; padding: 12px 16px; font-size: 0.84rem; line-height: 1.65; color: var(–navy); animation: fadeIn 0.3s ease; }
+.answer-reveal.open { display: block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
+.answer-reveal strong { color: #111; }
+
+/* MATCHING */
+.matching-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; width: 100%; margin-bottom: 12px; }
+.match-item { background: var(–white); border-radius: 8px; padding: 11px 14px; font-size: 0.83rem; box-shadow: 0 1px 6px rgba(0,0,0,0.06); cursor: pointer; border: 2px solid transparent; transition: all 0.2s; line-height: 1.4; }
+.match-item:hover { border-color: var(–tan-dark); }
+.match-item.selected { border-color: var(–accent); background: #fff3e8; }
+.match-item.matched-correct { border-color: #111; background: #1a1a1a; color: #fff; cursor: default; }
+.match-item.matched-wrong { border-color: #aaa; background: #d0d0d0; }
+
+/* AROUSAL CARDS */
+.arousal-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; width: 100%; margin-bottom: 14px; }
+.arousal-card { border-radius: 12px; padding: 16px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+.arousal-card .big { font-size: 2rem; margin-bottom: 6px; }
+.arousal-card h3 { font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+.arousal-card p { font-size: 0.8rem; line-height: 1.5; }
+.arousal-low { background: #f0f0f0; border-top: 4px solid #888; }
+.arousal-low h3 { color: #555; }
+.arousal-mid { background: #1a1a1a; border-top: 4px solid #000; color: #fff; }
+.arousal-mid h3 { color: #fff; }
+.arousal-high { background: #ddd; border-top: 4px solid #555; }
+.arousal-high h3 { color: #333; }
+
+/* SMART TABLE */
+.smart-table { width: 100%; border-collapse: collapse; margin-bottom: 14px; font-size: 0.84rem; }
+.smart-table th { background: var(–navy); color: var(–tan-light); padding: 10px 14px; text-align: left; font-weight: 700; letter-spacing: 0.04em; }
+.smart-table td { padding: 9px 14px; border-bottom: 1px solid var(–tan-light); line-height: 1.5; color: var(–navy); }
+.smart-table tr:nth-child(even) td { background: rgba(212,184,150,0.15); }
+.smart-table tr:hover td { background: rgba(212,184,150,0.3); }
+.smart-letter { font-family: var(–font-display); font-size: 1.1rem; font-weight: 700; color: var(–accent); }
+
+/* NAV */
+#nav {
+position: fixed;
+bottom: 28px;
+left: 50%;
+transform: translateX(-50%);
+display: flex;
+align-items: center;
+gap: 14px;
+background: rgba(255,255,255,0.85);
+backdrop-filter: blur(12px);
+-webkit-backdrop-filter: blur(12px);
+border-radius: 40px;
+padding: 10px 24px;
+box-shadow:
+0 8px 32px rgba(0,0,0,0.22),
+0 2px 8px rgba(0,0,0,0.14),
+0 0 0 1px rgba(0,0,0,0.06);
+z-index: 99;
+border: 1px solid rgba(255,255,255,0.6);
+}
+.nav-btn { background: var(–navy); color: var(–white); border: none; border-radius: 50%; width: 36px; height: 36px; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+.nav-btn:hover { background: var(–accent); }
+.nav-btn:disabled { background: #ccc; cursor: default; }
+#slide-counter { font-size: 0.8rem; font-weight: 700; color: var(–navy); min-width: 70px; text-align: center; letter-spacing: 0.05em; }
+
+.slide::-webkit-scrollbar { width: 4px; }
+.slide::-webkit-scrollbar-track { background: transparent; }
+.slide::-webkit-scrollbar-thumb { background: var(–tan); border-radius: 2px; }
+</style>
+
+</head>
+<body>
+
+<div id="progress-bar"></div>
+<div id="slideshow">
+
+<!-- ══ SLIDE 1: COVER ══ -->
+
+<div class="slide slide-cover active" id="slide-1">
+  <div class="week-badge">MOD008113 · ELSCI09 · Weeks 7 &amp; 8</div>
+  <h1>Psychology &amp;<br/>The Brain</h1>
+  <p>Neuroplasticity, Personality, Motivation, Aggression &amp; Optimal Performance — for Aspiring Nurses</p>
+  <div class="aru-logo">ARU College Cambridge &amp; Chelmsford</div>
+</div>
+
+<!-- ══ SLIDE 2: DIVIDER — NEURO ══ -->
+
+<div class="slide slide-divider" id="slide-2">
+  <div class="section-num">01</div>
+  <h2>Neuroplasticity</h2>
+  <p>Your brain can change — and that's incredibly powerful for nursing and rehabilitation.</p>
+</div>
+
+<!-- ══ SLIDE 3: WHAT IS NEUROPLASTICITY ══ -->
+
+<div class="slide slide-content" id="slide-3">
+  <div class="slide-tag">Week 7 · Neuroplasticity</div>
+  <h2 class="slide-title">What Is Neuroplasticity?</h2>
+  <div class="card-grid">
+    <div class="card">
+      <h3>🧠 The Simple Idea</h3>
+      <p>The brain's ability to <strong>change and adapt</strong> throughout life. Not fixed — it rewires itself based on experience.</p>
+    </div>
+    <div class="card">
+      <h3>⚡ When It Happens</h3>
+      <ul>
+        <li>Learning new skills</li>
+        <li>Recovering from injury</li>
+        <li>Ageing</li>
+        <li>Disease processes</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>🔗 Key Mechanism</h3>
+      <p><strong>Synaptogenesis</strong> — new connections form between neurons. "Neurons that fire together, wire together!"</p>
+    </div>
+  </div>
+  <div class="nursing-box">
+    <div class="icon">🏥</div>
+    <p><strong>Nursing Example:</strong> A stroke patient re-learning to walk is neuroplasticity in action. The brain reroutes signals around the damaged area through therapy and repetition.</p>
+  </div>
+  <p class="cite">Spielman, Jenkins &amp; Lovett (2020). Psychology 2e. OpenStax.</p>
+</div>
+
+<!-- ══ SLIDE 4: SYNAPTOGENESIS & PRUNING ══ -->
+
+<div class="slide slide-content slide-tan" id="slide-4">
+  <div class="slide-tag">Week 7 · Neuroplasticity</div>
+  <h2 class="slide-title">Building &amp; Trimming Connections</h2>
+  <div class="two-col">
+    <div class="card">
+      <h3>🌱 Synaptogenesis</h3>
+      <p>The brain <strong>grows new synapses</strong>. Happens when we learn, practise, or experience new things.</p>
+      <br/><p style="font-size:0.8rem;color:#888;">Every clinical skill you practise builds new neural pathways!</p>
+    </div>
+    <div class="card">
+      <h3>✂️ Synaptic Pruning</h3>
+      <p>The brain <strong>removes weak or unused connections</strong> to work more efficiently — like clearing a cluttered filing cabinet.</p>
+      <br/><p style="font-size:0.8rem;color:#888;">Peaks in teenage years. Continues throughout life.</p>
+    </div>
+  </div>
+  <div class="nursing-box">
+    <div class="icon">💡</div>
+    <p><strong>Real-Life Evidence:</strong> London taxi drivers develop <strong>denser grey matter</strong> in the hippocampus from memorising thousands of routes. Imagine what nursing training does to YOUR brain! <em>(Maguire et al., 2000)</em></p>
+  </div>
+  <p class="cite">Spielman, Jenkins &amp; Lovett (2020). Psychology 2e. OpenStax.</p>
+</div>
+
+<!-- ══ SLIDE 5: PLASTICITY IN REHAB ══ -->
+
+<div class="slide slide-content" id="slide-5">
+  <div class="slide-tag">Week 7 · Plasticity in Practice</div>
+  <h2 class="slide-title">Plasticity in Rehabilitation</h2>
+  <div class="card-grid">
+    <div class="card">
+      <h3>🤖 Robotic Therapy</h3>
+      <p>Robots assist stroke patients to move limbs, triggering plasticity to regain motor function. <em>(Amirabdollahian et al., 2003)</em></p>
+    </div>
+    <div class="card">
+      <h3>🦾 Prosthetic Limbs</h3>
+      <p>Extended use reorganises the brain — motor areas begin functioning like those of a typical person. <em>(van den Heiligenberg et al., 2018)</em></p>
+    </div>
+    <div class="card">
+      <h3>🥽 Virtual Reality</h3>
+      <p>Chronic pain patients using 360° VR therapy reported a <strong>60% reduction</strong> in symptoms. <em>(Jones, Moore &amp; Choo, 2016)</em></p>
+    </div>
+    <div class="card">
+      <h3>🗣️ Multilingualism</h3>
+      <p>Speaking multiple languages increases grey &amp; white matter density. The brain literally grows! <em>(Mechelli et al., 2004)</em></p>
+    </div>
+  </div>
+  <div class="nursing-box">
+    <div class="icon">👩‍⚕️</div>
+    <p><strong>Why it matters:</strong> Understanding plasticity helps nurses <strong>support patient rehab</strong>, explain recovery timelines, and advocate for evidence-based therapies that harness the brain's ability to heal.</p>
+  </div>
+</div>
+
+<!-- ══ SLIDE 6: QUIZ — NEUROPLASTICITY ══ -->
+
+<div class="slide slide-content slide-navy-soft" id="slide-6">
+  <div class="slide-tag">Quiz Time! 🎯 · Neuroplasticity</div>
+  <h2 class="slide-title">Check Your Understanding</h2>
+  <div class="quiz-wrap">
+    <div class="question-block">
+      <p class="q-text">1. Which process describes the brain <em>creating</em> new connections between neurons?</p>
+      <div class="options">
+        <button class="opt-btn" data-correct="false">A. Synaptic pruning</button>
+        <button class="opt-btn" data-correct="true">B. Synaptogenesis</button>
+        <button class="opt-btn" data-correct="false">C. Myelination decay</button>
+        <button class="opt-btn" data-correct="false">D. Dendritic atrophy</button>
+      </div>
+      <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Explanation</button>
+      <div class="answer-reveal"><strong>B. Synaptogenesis</strong> is correct. The brain forms new synapses when we learn something new — the foundation of neuroplasticity and why rehabilitation works.</div>
+    </div>
+    <div class="question-block">
+      <p class="q-text">2. True or False: The adult brain stops changing after the age of 25.</p>
+      <div class="tf-row">
+        <button class="tf-btn" data-correct="false">TRUE</button>
+        <button class="tf-btn" data-correct="true">FALSE</button>
+      </div>
+      <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Explanation</button>
+      <div class="answer-reveal"><strong>FALSE.</strong> The brain retains plasticity throughout life. Synaptogenesis and pruning continue into old age, though they slow down. This is why lifelong learning — and nursing CPD — works!</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 7: DIVIDER — SPORTS PSYCH ══ -->
+
+<div class="slide slide-divider" id="slide-7">
+  <div class="section-num">02</div>
+  <h2>Sports Psychology</h2>
+  <p>Personality, motivation, aggression and arousal — just as relevant on a hospital ward as on a football pitch.</p>
+</div>
+
+<!-- ══ SLIDE 8: PERSONALITY ══ -->
+
+<div class="slide slide-content" id="slide-8">
+  <div class="slide-tag">Week 8 · Personality &amp; Performance</div>
+  <h2 class="slide-title">Personality &amp; Performance</h2>
+  <div class="two-col">
+    <div class="card">
+      <h3>🧬 Trait Theory</h3>
+      <p>Personality is <strong>innate, stable and enduring</strong>. You are born with it and it stays consistent across situations.</p>
+      <br/><p style="font-size:0.8rem;color:#888;">🩺 A naturally calm nurse handles emergencies with composure.</p>
+    </div>
+    <div class="card">
+      <h3>👀 Social Learning Theory</h3>
+      <p>Behaviour is <strong>learned by observing and copying</strong> role models. Shaped by environment — not fixed.</p>
+      <br/><p style="font-size:0.8rem;color:#888;">🩺 A student adopts good bedside manner by watching senior nurses.</p>
+    </div>
+  </div>
+  <div class="card-grid" style="margin-top:12px;">
+    <div class="card">
+      <h3>🤫 Introverts</h3>
+      <p>Prefer low arousal. Thrive in tasks needing <strong>concentration &amp; precision</strong>.</p>
+      <p style="font-size:0.8rem;color:#888;margin-top:6px;">🩺 Surgical nursing, medication dispensing, detailed care planning.</p>
+    </div>
+    <div class="card">
+      <h3>🎉 Extroverts</h3>
+      <p>Need high arousal. Excel in <strong>fast-paced, social</strong> environments.</p>
+      <p style="font-size:0.8rem;color:#888;margin-top:6px;">🩺 A&amp;E, community nursing, patient education.</p>
+    </div>
+  </div>
+  <p class="cite">Trait Theory; Bandura's Social Learning Theory</p>
+</div>
+
+<!-- ══ SLIDE 9: MOTIVATION ══ -->
+
+<div class="slide slide-content slide-tan" id="slide-9">
+  <div class="slide-tag">Week 8 · Motivation</div>
+  <h2 class="slide-title">What Drives Us?</h2>
+  <div class="two-col">
+    <div class="card">
+      <h3>❤️ Intrinsic Motivation</h3>
+      <p>Comes from <strong>within</strong>. Pride, satisfaction, love of the job. Long-lasting and powerful.</p>
+      <br/><p style="font-size:0.8rem;color:#888;">🩺 Feeling fulfilled after supporting a patient through a difficult diagnosis.</p>
+    </div>
+    <div class="card">
+      <h3>🏆 Extrinsic Motivation</h3>
+      <p>Comes from <strong>outside</strong>. More temporary.<br/><strong>Tangible:</strong> pay, certificates.<br/><strong>Intangible:</strong> praise, recognition.</p>
+      <br/><p style="font-size:0.8rem;color:#888;">🩺 A "thank you" card from a patient's family.</p>
+    </div>
+  </div>
+  <div class="card" style="margin-top:12px;width:100%;">
+    <h3>⚠️ Key Balance</h3>
+    <p>Overusing extrinsic rewards can <strong>undermine intrinsic motivation</strong>. Intangible rewards (praise, recognition) are generally more effective long-term than tangible ones.</p>
+  </div>
+  <p class="cite">Heider (1958) Attribution Theory; McClelland et al. (1953)</p>
+</div>
+
+<!-- ══ SLIDE 10: NACH vs NAF ══ -->
+
+<div class="slide slide-content" id="slide-10">
+  <div class="slide-tag">Week 8 · Achievement Motivation</div>
+  <h2 class="slide-title">NACH vs NAF: Two Types of Mindset</h2>
+  <div class="two-col">
+    <div class="card" style="border-left-color:#111;">
+      <h3 style="color:#111;">🚀 NACH — Need to Achieve</h3>
+      <ul>
+        <li>Seeks challenges</li>
+        <li>Not afraid of failure</li>
+        <li>Persists under pressure</li>
+        <li>Values feedback</li>
+        <li>Attributes success to effort</li>
+      </ul>
+      <br/><p style="font-size:0.8rem;color:#888;">🩺 Volunteers for complex cases to grow their skills.</p>
+    </div>
+    <div class="card" style="border-left-color:#666;">
+      <h3 style="color:#666;">😟 NAF — Need to Avoid Failure</h3>
+      <ul>
+        <li>Avoids difficult tasks</li>
+        <li>Fears being evaluated</li>
+        <li>Attributes success to luck</li>
+        <li>Performs worse when watched</li>
+      </ul>
+      <br/><p style="font-size:0.8rem;color:#888;">🩺 Avoids clinical placements out of fear of mistakes.</p>
+    </div>
+  </div>
+  <div class="nursing-box">
+    <div class="icon">💬</div>
+    <p><strong>Reflection:</strong> How might you support a NAF colleague? Mentoring, constructive feedback and a safe learning environment can shift someone towards a NACH mindset. <em>(Atkinson, 1957)</em></p>
+  </div>
+</div>
+
+<!-- ══ SLIDE 11: AGGRESSION ══ -->
+
+<div class="slide slide-content slide-navy-soft" id="slide-11">
+  <div class="slide-tag">Week 8 · Aggression</div>
+  <h2 class="slide-title">Understanding Aggression</h2>
+  <div class="card-grid">
+    <div class="card">
+      <h3>📖 Definition</h3>
+      <p>"Any behaviour directed towards harming another who is motivated to avoid such treatment." <em>(Baron, 1977)</em></p>
+      <br/><p style="font-size:0.8rem;color:#888;">Requires <strong>intent</strong> — accidents are NOT aggression.</p>
+    </div>
+    <div class="card">
+      <h3>⚡ Direct vs Indirect</h3>
+      <p><strong>Direct:</strong> Shouting at a colleague or patient.<br/><br/><strong>Indirect:</strong> Slamming equipment out of frustration.</p>
+    </div>
+    <div class="card">
+      <h3>🧬 Trait/Instinct Theory</h3>
+      <p>Aggression is <strong>genetically inherited</strong> — an innate instinct. Competition brings it to the surface.</p>
+    </div>
+    <div class="card">
+      <h3>👁️ Social Learning Theory</h3>
+      <p>Aggression is <strong>learned</strong> by watching others. If rewarded or unchallenged, it is repeated. <em>(Bandura's Bobo Doll)</em></p>
+    </div>
+  </div>
+  <div class="nursing-box">
+    <div class="icon">🏥</div>
+    <p><strong>Nursing Context:</strong> Healthcare workers face aggression from patients or relatives. Understanding the causes — <strong>frustration, fear, pain</strong> — helps nurses de-escalate with empathy. <em>(Endersen &amp; Olweus, 2005)</em></p>
+  </div>
+</div>
+
+<!-- ══ SLIDE 12: AROUSAL — ALL THREE THEORIES ══ -->
+
+<div class="slide slide-content slide-tan" id="slide-12">
+  <div class="slide-tag">Week 8 · Arousal &amp; Performance</div>
+  <h2 class="slide-title">Arousal Theories: From Drive to the Zone</h2>
+  <div class="two-col" style="margin-bottom:12px;">
+    <div class="card">
+      <h3>📈 Drive Theory <span style="font-weight:300;font-size:0.78rem;">(Hull, 1943)</span></h3>
+      <p>More arousal = better performance. A <strong>straight line up</strong>. Works best for well-learned skills only.</p>
+      <br/><p style="font-size:0.8rem;color:#888;">⚠️ Problem: Even experts "choke" — Drive Theory can't explain this.</p>
+    </div>
+    <div class="card">
+      <h3>🔔 Inverted-U Theory <span style="font-weight:300;font-size:0.78rem;">(Yerkes &amp; Dodson, 1908)</span></h3>
+      <p>There is an <strong>optimal arousal point</strong>. Too little or too much = worse performance. Forms an upside-down U shape.</p>
+    </div>
+  </div>
+  <div class="arousal-row">
+    <div class="arousal-card arousal-low">
+      <div class="big">😴</div>
+      <h3>Too Little Arousal</h3>
+      <p>Bored. Unfocused. Miss details.</p>
+      <p style="font-size:0.75rem;margin-top:6px;color:#555;">🩺 Nurse on quiet night shift misses patient deterioration.</p>
+    </div>
+    <div class="arousal-card arousal-mid">
+      <div class="big">🎯</div>
+      <h3>IZOF — The Zone</h3>
+      <p>Relaxed, focused, in control. Peak performance.</p>
+      <p style="font-size:0.75rem;margin-top:6px;color:#555;">🩺 Nurse calm and sharp during a cardiac arrest response.</p>
+    </div>
+    <div class="arousal-card arousal-high">
+      <div class="big">😰</div>
+      <h3>Too Much Arousal</h3>
+      <p>Overwhelmed. Errors increase.</p>
+      <p style="font-size:0.75rem;margin-top:6px;color:#555;">🩺 Student nurse so anxious in OSCE they forget basic steps.</p>
+    </div>
+  </div>
+  <p class="cite">Drive Theory (Hull, 1943); Inverted-U (Yerkes &amp; Dodson, 1908); IZOF (Hanin, 1980)</p>
+</div>
+
+<!-- ══ SLIDE 13: PSYCHOLOGICAL STRATEGIES — SMART + SCAT/STAI ══ -->
+
+<div class="slide slide-content" id="slide-13">
+  <div class="slide-tag">Week 8 · Psychological Strategies to Enhance Performance</div>
+  <h2 class="slide-title">SMART Goals, SCAT &amp; STAI</h2>
+  <table class="smart-table">
+    <tr><th colspan="3">SMART Goal Setting — Nursing Example</th></tr>
+    <tr><td><span class="smart-letter">S</span></td><td><strong>Specific</strong></td><td>"I will improve my cannulation technique."</td></tr>
+    <tr><td><span class="smart-letter">M</span></td><td><strong>Measurable</strong></td><td>"I will practise 3x per week and track my first-attempt success rate."</td></tr>
+    <tr><td><span class="smart-letter">A</span></td><td><strong>Achievable</strong></td><td>"My mentor has agreed to supervise and give feedback each session."</td></tr>
+    <tr><td><span class="smart-letter">R</span></td><td><strong>Realistic</strong></td><td>"Achievable within my current placement and skill level."</td></tr>
+    <tr><td><span class="smart-letter">T</span></td><td><strong>Time-bound</strong></td><td>"80% first-attempt success within 6 weeks."</td></tr>
+  </table>
+  <div class="two-col">
+    <div class="card" style="border-left-color:#888;">
+      <h3 style="color:#333;">📋 SCAT</h3>
+      <p><strong>Sport Competition Anxiety Test</strong> — questionnaire measuring how anxious someone typically gets in competitive situations. Linked to personality. <em>(Martens, 1977)</em></p>
+    </div>
+    <div class="card" style="border-left-color:#888;">
+      <h3 style="color:#333;">📊 STAI</h3>
+      <p><strong>State-Trait Anxiety Inventory</strong> — measures <em>trait anxiety</em> (your general tendency) AND <em>state anxiety</em> (how you feel right now). Widely used in healthcare. <em>(Spielberger, 1983)</em></p>
+    </div>
+  </div>
+  <p class="cite">Martens (1977); Spielberger (1983)</p>
+</div>
+
+<!-- ══ SLIDE 14: MATCHING QUIZ ══ -->
+
+<div class="slide slide-content slide-navy-soft" id="slide-14">
+  <div class="slide-tag">Quiz Time! 🧩 · Matching Exercise</div>
+  <h2 class="slide-title">Match the Concept to its Description</h2>
+  <p style="font-size:0.83rem;margin-bottom:14px;color:#666;">Click a term, then click its matching description.</p>
+  <div class="matching-grid" id="matching-grid">
+    <div class="match-item term" data-pair="1">NACH</div>
+    <div class="match-item desc" data-pair="3">Removing weak neural connections for efficiency</div>
+    <div class="match-item term" data-pair="2">Synaptogenesis</div>
+    <div class="match-item desc" data-pair="1">A drive to seek challenges and persist through failure</div>
+    <div class="match-item term" data-pair="3">Synaptic Pruning</div>
+    <div class="match-item desc" data-pair="4">Coming from within — pride, satisfaction, love of the task</div>
+    <div class="match-item term" data-pair="4">Intrinsic Motivation</div>
+    <div class="match-item desc" data-pair="5">Measures both general and situational anxiety levels</div>
+    <div class="match-item term" data-pair="5">STAI</div>
+    <div class="match-item desc" data-pair="2">The brain forming new connections between neurons</div>
+  </div>
+  <button class="show-answer-btn" onclick="revealMatching()">Show All Answers</button>
+  <div class="answer-reveal" id="match-reveal">
+    <strong>NACH</strong> → A drive to seek challenges and persist through failure<br/>
+    <strong>Synaptogenesis</strong> → The brain forming new connections between neurons<br/>
+    <strong>Synaptic Pruning</strong> → Removing weak neural connections for efficiency<br/>
+    <strong>Intrinsic Motivation</strong> → Coming from within — pride, satisfaction, love of the task<br/>
+    <strong>STAI</strong> → Measures both general and situational anxiety levels
+  </div>
+</div>
+
+<!-- ══ SLIDE 15: MCQ QUIZ ══ -->
+
+<div class="slide slide-content slide-tan" id="slide-15">
+  <div class="slide-tag">Quiz Time! 🎯 · Multiple Choice</div>
+  <h2 class="slide-title">Test Your Knowledge</h2>
+  <div class="quiz-wrap">
+    <div class="question-block">
+      <p class="q-text">1. A patient shouts at a nurse because they're scared. According to Baron (1977), is this aggression?</p>
+      <div class="options">
+        <button class="opt-btn" data-correct="false">A. Yes — any harmful behaviour counts</button>
+        <button class="opt-btn" data-correct="false">B. Yes — shouting always counts</button>
+        <button class="opt-btn" data-correct="true">C. It depends — aggression requires intent to harm</button>
+        <button class="opt-btn" data-correct="false">D. No — words are never aggression</button>
+      </div>
+      <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Explanation</button>
+      <div class="answer-reveal"><strong>C is correct.</strong> Baron (1977) defines aggression as behaviour <em>intended</em> to harm. A frightened patient shouting out of fear is likely not acting aggressively — context and intent matter enormously in nursing practice.</div>
+    </div>
+    <div class="question-block">
+      <p class="q-text">2. Which best describes the SMART goal "I will achieve 80% first-attempt cannulation success within 6 weeks"?</p>
+      <div class="options">
+        <button class="opt-btn" data-correct="false">A. Specific and Measurable only</button>
+        <button class="opt-btn" data-correct="true">B. All five SMART criteria are met</button>
+        <button class="opt-btn" data-correct="false">C. Time-bound only</button>
+      </div>
+      <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Explanation</button>
+      <div class="answer-reveal"><strong>B is correct.</strong> The goal is specific (cannulation), measurable (80%), achievable (with practice and supervision), realistic (for a student nurse) and time-bound (6 weeks). All five SMART criteria are met!</div>
+    </div>
+    <div class="question-block">
+      <p class="q-text">3. Which theory proposes that performance always improves in a straight line as arousal increases?</p>
+      <div class="options">
+        <button class="opt-btn" data-correct="false">A. Inverted-U Theory</button>
+        <button class="opt-btn" data-correct="false">B. IZOF</button>
+        <button class="opt-btn" data-correct="true">C. Drive Theory</button>
+      </div>
+      <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Explanation</button>
+      <div class="answer-reveal"><strong>C. Drive Theory</strong> (Hull, 1943) proposes a linear relationship — more arousal always means better performance. However this was criticised because even highly skilled people choke under extreme pressure, which Drive Theory cannot explain.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 16: TRUE/FALSE FINAL ROUND ══ -->
+
+<div class="slide slide-content" id="slide-16">
+  <div class="slide-tag">Quiz Time! ✅❌ · True or False Final Round</div>
+  <h2 class="slide-title">True or False — Final Round!</h2>
+  <div class="quiz-wrap">
+    <div class="question-block">
+      <p class="q-text">1. Extroverts perform best in quiet, low-stimulation environments.</p>
+      <div class="tf-row">
+        <button class="tf-btn" data-correct="false">TRUE</button>
+        <button class="tf-btn" data-correct="true">FALSE</button>
+      </div>
+      <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Explanation</button>
+      <div class="answer-reveal"><strong>FALSE.</strong> Extroverts need <strong>high arousal</strong> to perform at their best — they thrive in exciting, fast-paced settings like A&amp;E. It is <em>introverts</em> who prefer low-stimulation environments requiring concentration and precision.</div>
+    </div>
+    <div class="question-block">
+      <p class="q-text">2. Intangible rewards (e.g. praise) are generally more effective for long-term motivation than tangible ones (e.g. money).</p>
+      <div class="tf-row">
+        <button class="tf-btn" data-correct="true">TRUE</button>
+        <button class="tf-btn" data-correct="false">FALSE</button>
+      </div>
+      <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Explanation</button>
+      <div class="answer-reveal"><strong>TRUE.</strong> Research consistently shows intangible rewards sustain intrinsic motivation better. Over-relying on tangible rewards can actually erode an individual's inner drive — crucial for nursing management and student support.</div>
+    </div>
+    <div class="question-block">
+      <p class="q-text">3. The SCAT measures both an individual's general anxiety AND their anxiety in the current moment.</p>
+      <div class="tf-row">
+        <button class="tf-btn" data-correct="false">TRUE</button>
+        <button class="tf-btn" data-correct="true">FALSE</button>
+      </div>
+      <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Explanation</button>
+      <div class="answer-reveal"><strong>FALSE.</strong> The <strong>SCAT</strong> measures typical responses to competitive situations (trait anxiety only). It is the <strong>STAI</strong> that measures BOTH general (trait) AND current (state) anxiety. Don't mix them up!</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 17: SUMMARY ══ -->
+
+<div class="slide slide-cover" id="slide-17">
+  <div class="week-badge">Summary · Weeks 7 &amp; 8</div>
+  <h1>Key Takeaways</h1>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:22px;text-align:left;max-width:820px;">
+    <div style="background:rgba(255,255,255,0.1);border-radius:10px;padding:14px;">
+      <p style="font-size:0.75rem;color:var(--tan);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:5px;">🧠 Neuroplasticity</p>
+      <p style="font-size:0.82rem;opacity:0.85;line-height:1.6;">Brain rewires through experience. Rehab works because of plasticity. Keep learning!</p>
+    </div>
+    <div style="background:rgba(255,255,255,0.1);border-radius:10px;padding:14px;">
+      <p style="font-size:0.75rem;color:var(--tan);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:5px;">🎭 Personality</p>
+      <p style="font-size:0.82rem;opacity:0.85;line-height:1.6;">Trait vs Social Learning. Know your type — intro or extrovert — and use it wisely.</p>
+    </div>
+    <div style="background:rgba(255,255,255,0.1);border-radius:10px;padding:14px;">
+      <p style="font-size:0.75rem;color:var(--tan);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:5px;">🔥 Motivation</p>
+      <p style="font-size:0.82rem;opacity:0.85;line-height:1.6;">Intrinsic beats extrinsic long-term. NACH mindset = seek challenges, grow from failure.</p>
+    </div>
+    <div style="background:rgba(255,255,255,0.1);border-radius:10px;padding:14px;">
+      <p style="font-size:0.75rem;color:var(--tan);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:5px;">👊 Aggression</p>
+      <p style="font-size:0.82rem;opacity:0.85;line-height:1.6;">Intent matters. De-escalate with empathy. Assertion ≠ aggression.</p>
+    </div>
+    <div style="background:rgba(255,255,255,0.1);border-radius:10px;padding:14px;">
+      <p style="font-size:0.75rem;color:var(--tan);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:5px;">⚡ Arousal</p>
+      <p style="font-size:0.82rem;opacity:0.85;line-height:1.6;">Drive Theory → Inverted-U → IZOF. Find your zone. Not too little, not too much.</p>
+    </div>
+    <div style="background:rgba(255,255,255,0.1);border-radius:10px;padding:14px;">
+      <p style="font-size:0.75rem;color:var(--tan);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:5px;">🎯 Strategies</p>
+      <p style="font-size:0.82rem;opacity:0.85;line-height:1.6;">SMART goals. Measure anxiety with SCAT &amp; STAI. Plan, prepare, perform.</p>
+    </div>
+  </div>
+  <div class="aru-logo" style="margin-top:26px;">ARU College · MOD008113 · Good luck in your studies! 🎓</div>
+</div>
+
+</div><!-- /slideshow -->
+
+<div id="nav">
+  <button class="nav-btn" id="prev-btn" onclick="changeSlide(-1)" disabled>&#8592;</button>
+  <span id="slide-counter">1 / 17</span>
+  <button class="nav-btn" id="next-btn" onclick="changeSlide(1)">&#8594;</button>
+</div>
+
+<script>
+  const TOTAL = 17;
+  let current = 1;
+
+  function changeSlide(dir) {
+    const oldSlide = document.getElementById('slide-' + current);
+    const newIdx = current + dir;
+    if (newIdx < 1 || newIdx > TOTAL) return;
+    oldSlide.classList.remove('active');
+    oldSlide.classList.add('exit');
+    setTimeout(() => oldSlide.classList.remove('exit'), 500);
+    current = newIdx;
+    document.getElementById('slide-' + current).classList.add('active');
+    document.getElementById('slide-counter').textContent = current + ' / ' + TOTAL;
+    document.getElementById('prev-btn').disabled = current === 1;
+    document.getElementById('next-btn').disabled = current === TOTAL;
+    document.getElementById('progress-bar').style.width = ((current / TOTAL) * 100) + '%';
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changeSlide(1);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') changeSlide(-1);
+  });
+
+  document.getElementById('progress-bar').style.width = ((1/TOTAL)*100)+'%';
+
+  function checkMCQ(btn, correct) {
+    const opts = btn.closest('.options').querySelectorAll('.opt-btn');
+    opts.forEach(o => o.disabled = true);
+    if (correct) {
+      btn.classList.add('correct');
+    } else {
+      btn.classList.add('wrong');
+      opts.forEach(o => {
+        if (o.dataset.correct === 'true') o.classList.add('correct');
+      });
+    }
+  }
+
+  function checkTF(btn, correct) {
+    const btns = btn.closest('.tf-row').querySelectorAll('.tf-btn');
+    btns.forEach(b => b.disabled = true);
+    if (correct) {
+      btn.classList.add('correct');
+    } else {
+      btn.classList.add('wrong');
+      btns.forEach(b => {
+        if (b.dataset.correct === 'true') b.classList.add('correct');
+      });
+    }
+  }
+
+  function toggleAnswer(btn) {
+    const reveal = btn.nextElementSibling;
+    reveal.classList.toggle('open');
+    btn.textContent = reveal.classList.contains('open') ? 'Hide Explanation' : 'Show Explanation';
+  }
+
+  let selectedTerm = null;
+  document.querySelectorAll('.match-item').forEach(item => {
+    item.addEventListener('click', () => {
+      if (item.classList.contains('matched-correct')) return;
+      if (item.classList.contains('term')) {
+        document.querySelectorAll('.match-item').forEach(i => i.classList.remove('selected'));
+        selectedTerm = item;
+        item.classList.add('selected');
+      } else if (item.classList.contains('desc') && selectedTerm) {
+        if (selectedTerm.dataset.pair === item.dataset.pair) {
+          selectedTerm.classList.remove('selected');
+          selectedTerm.classList.add('matched-correct');
+          item.classList.add('matched-correct');
+        } else {
+          selectedTerm.classList.add('matched-wrong');
+          item.classList.add('matched-wrong');
+          setTimeout(() => {
+            selectedTerm.classList.remove('matched-wrong','selected');
+            item.classList.remove('matched-wrong');
+          }, 700);
+        }
+        selectedTerm = null;
+      }
+    });
+  });
+
+  // MCQ button listeners
+  document.querySelectorAll('.opt-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      checkMCQ(this, this.dataset.correct === 'true');
+    });
+  });
+
+  // TF button listeners
+  document.querySelectorAll('.tf-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      checkTF(this, this.dataset.correct === 'true');
+    });
+  });
+
+  function revealMatching() {
+    document.getElementById('match-reveal').classList.add('open');
+  }
+</script>
+
+</body>
+</html>
